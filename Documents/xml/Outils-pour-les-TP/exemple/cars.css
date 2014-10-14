@@ -1,0 +1,18 @@
+BODY {
+	background-color:#FFFFF0;
+	font-family:arial, helvetica, sans-serif;
+	font-size:12pt;
+	color:teal;
+}
+
+DIV.bleu {
+	background-color:lightblue;
+	font-style:italic;
+	padding:4px;
+}
+
+DIV.rouge {
+	background-color:pink;
+	font-style:italic;
+	padding:4px;
+}

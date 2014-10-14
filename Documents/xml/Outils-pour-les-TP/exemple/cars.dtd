@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!ELEMENT cars (car*)>
+<!ELEMENT car (model, year, price, country?)>
+<!ATTLIST car make NMTOKEN #REQUIRED>
+
+<!ELEMENT model (#PCDATA)>
+<!ELEMENT year (#PCDATA)>
+<!ELEMENT price (#PCDATA)>
+<!ATTLIST price currency (Euros|Livres|USD) #REQUIRED>
+<!ELEMENT country (#PCDATA)>

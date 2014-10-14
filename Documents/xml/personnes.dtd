@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!ELEMENT personnes (personne*)>
+<!ELEMENT personne (nom?,prenom?,sexe?,naissance?,deces?,mariage*)>
+<!ELEMENT naissance (lieu?, date?, pere?, mere?)>
+<!ELEMENT deces (lieu?, date?, personne?)>
+
+<!ELEMENT pere (personne)>
+<!ELEMENT mere (personne)>
+
+<!ELEMENT mariage (personne?,date?,lieu?)>
+
+
+<!ELEMENT nom (#PCDATA)>
+<!ELEMENT prenom (#PCDATA)>
+<!ELEMENT sexe (#PCDATA)>
+<!ELEMENT lieu (#PCDATA)>
+<!ELEMENT date (#PCDATA)>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="cars.xsl"?>
+<!--output="bibtex.html"-->
+<!--xpath="//author"-->
+
+
+<!DOCTYPE bibtex SYSTEM "bibtex.dtd">
+
+<bibtex>
+	<book nom = "edix400">
+		<author> Richard Hill </author>
+		<title> EDI and X400 --- Using Pedi </title>
+		<publisher> Technology Appraisal Ltd. </publisher>
+		<address> Grove House,551 London Road, Isleworth, TW7 4DS, UK </address>
+		<year> 1990 </year>
+	</book>
+	
+	<book nom = "latex">
+		<author> Leslie Lamport </author>
+		<title> A Document preparation system -- LaTex user's guide  </title>
+		<publisher> Addison-Wesley </publisher>
+		<year> 1986 </year>
+	</book>
+	
+	<article nom = "hudak">
+		<author> Paul</author>
+		<title> Foncionnal programming languages </title>
+		<journal> ACM Computing surveys </journal>
+		<volume> 21 </volume>
+		<number> 3 </number>
+		<year> 1989 </year>
+		<pages> "359--411" </pages>
+	</article>
+	
+	<article nom = "objc">
+		<author> B.J. Cox</author>
+		<title> The Object Oriented Pre-Compiler </title>
+		<journal> ACM Sigplan Notices</journal>
+		<volume> 18 </volume>
+		<number> 1 </number>
+		<month> Janvierrrr </month>
+		<year> 1983 </year>
+		<pages> "15--22" </pages>
+	</article>
+	
+	<article nom = "cousineau">
+		<author> Guy Cousineau</author>
+		<title> Analyse de quelques contributions de la theorie de la programmation </title>
+		<journal> ACM Sigplan Notices</journal>
+		<volume> 18 </volume>
+		<number> 1 </number>
+		<month> Janvierrrr </month>
+		<year> 1983 </year>
+		<keyword> fonctions, types </keyword>
+	</article>
+	
+	<article nom = "Burkowski94">
+		<author> Charles L. A. Clarke and G. V. Cormarck and F. J. Burkowski</author>
+		<author> Cormarck and F. J. Burkowski</author>
+		<title> An algebra for structeres text and Search and A framework for its implementation</title>
+		<journal> the computing journa </journal>
+		<volume> 38 </volume>
+		<number> 1 </number>
+		<month> janvier </month>
+		<year> 1994 </year>
+		<pages> "43--56" </pages>
+		<keyword> structured text, overlapped lists </keyword>
+		<url> http://citeseer.nj.nec.com/clarke95algebra.html </url>
+	</article>
+
+
+</bibtex>

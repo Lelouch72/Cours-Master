@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="cars.xsl"?>
+<!--output="cars.html"-->
+<!--xpath="//model"-->
+
+<!DOCTYPE cars SYSTEM "cars.dtd">
+<cars>
+	<car make="BMW">
+		<model>Z4 Roadster</model>
+		<year>2012</year>
+		<price currency="Euros">47500</price>
+		<country>Germany</country>
+	</car>
+	<car make="Peugeot">
+		<model>308 SW Style</model>
+		<year>2012</year>
+		<price currency="Euros">17790</price>
+	</car>
+	<car make="Peugeot">
+		<model>RCZ Coupé</model>
+		<year>2013</year>
+		<price currency="Euros">29900</price>
+	</car>
+</cars>

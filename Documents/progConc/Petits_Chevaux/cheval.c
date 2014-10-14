@@ -1,0 +1,325 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/msg.h>
+#include <string.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <sys/sem.h>
+
+#include <commun.h>
+#include <liste.h>
+#include <piste.h>
+
+int
+main( int nb_arg , char * tab_arg[] )
+{
+
+        /* my */
+
+        int i, pist, list;
+        int recherche=0;
+        int suppr=0;
+
+        cell_t cell_tmp;
+        elem_t elem_tmp;
+
+        /* -- */
+
+  int cle_piste ;
+  piste_t * piste = NULL ;
+
+  int cle_liste ;
+  liste_t * liste = NULL ;
+
+  char marque ;
+
+  booleen_t fini = FAUX ;
+  piste_id_t deplacement = 0 ;
+  piste_id_t depart = 0 ;
+  piste_id_t arrivee = 0 ;
+
+
+  cell_t cell_cheval ;
+
+
+  elem_t elem_cheval ;
+
+
+
+  /*-----*/
+
+  if( nb_arg != 4 )
+    {
+      fprintf( stderr, "usage : %s <cle de piste> <cle de liste> <marque>\n" , tab_arg[0] );
+      exit(-1);
+    }
+
+  if( sscanf( tab_arg[1] , "%d" , &cle_piste) != 1 )
+    {
+      fprintf( stderr, "%s : erreur , mauvaise cle de piste (%s)\n" ,
+               tab_arg[0]  , tab_arg[1] );
+      exit(-2);
+    }
+
+
+  if( sscanf( tab_arg[2] , "%d" , &cle_liste) != 1 )
+    {
+      fprintf( stderr, "%s : erreur , mauvaise cle de liste (%s)\n" ,
+               tab_arg[0]  , tab_arg[2] );
+      exit(-2);
+    }
+
+  if( sscanf( tab_arg[3] , "%c" , &marque) != 1 )
+    {
+      fprintf( stderr, "%s : erreur , mauvaise marque de cheval (%s)\n" ,
+               tab_arg[0]  , tab_arg[3] );
+      exit(-2);
+    }
+
+
+  /* Init de l'attente */
+  commun_initialiser_attentes() ;
+
+
+  /* Init de la cellule du cheval pour faire la course */
+  cell_pid_affecter( &cell_cheval  , getpid());
+  cell_marque_affecter( &cell_cheval , marque );
+
+  /* Init de l'element du cheval pour l'enregistrement */
+  elem_cell_affecter(&elem_cheval , cell_cheval ) ;
+  elem_etat_affecter(&elem_cheval , EN_COURSE ) ;
+
+  /*
+   * Enregistrement du cheval dans la liste
+   */
+		// on creer un semaphore pour notre cheval
+        if(elem_sem_creer(&elem_cheval)==-1) {
+                perror("Probleme recontre lors de la creation du semaphore cheval");
+                exit(-1);
+        }
+		// on creer un segment de memoire partagee pour la piste
+        if((pist=shmget(cle_piste,sizeof(piste_t),0))==-1) {
+                perror("Probleme sur shmget piste");
+                exit(-1);
+        }
+
+		// on creer un segment de memoire partagee pour la liste
+        if((list=shmget(cle_liste,sizeof(liste_t),0))==-1) {
+                perror("Probleme sur shmget liste");
+                exit(-1);
+        }
+		// on attache notre piste au segment de memoire partagee
+        if((piste=shmat(pist,0,0))==(piste_t*)-1) {
+                perror("Probleme sur shmat piste");
+                exit(-1);
+        }
+		// on attache notre liste au segment de memoire partagee
+        if((liste=shmat(list,0,0))==(liste_t*)-1) {
+                perror("Probleme sur shmat liste");
+                exit(-1);
+        }
+		// on ajoute le cheval sur notre liste
+        if(liste_elem_ajouter(liste,elem_cheval)==0) {
+                printf("Le cheval a ete ajoute dans la liste");
+        }else{
+                perror("Le cheval n'a pas ete ajoute dans la liste");
+                exit(-1);
+        }
+
+        // on recupere l ID du semaphore de la piste 
+        int semaph=semget(cle_piste,PISTE_LONGUEUR,0);
+
+        /*declaration de plusieurs sembuf*/
+        
+        // operation P()
+        struct sembuf sb1;
+          sb1.sem_num=0;
+          sb1.sem_op=-1;
+          sb1.sem_flg=0;
+		// operation V()
+          struct sembuf sb2;
+          sb2.sem_num=0;
+          sb2.sem_op=1;
+          sb2.sem_flg=0;
+          
+		// operation V()
+        struct sembuf semArr;/*sembuf pour l'arrivee*/
+          semArr.sem_num=0;
+          semArr.sem_op=-1;
+          semArr.sem_flg=0;
+
+  while( ! fini )
+    {
+      /* Attente entre 2 coup de de */
+      commun_attendre_tour() ;
+
+      /*
+       * Verif si pas decanille
+       */
+
+            sb1.sem_num=0;
+            sb2.sem_num=0;
+
+                /*verrouillage de la liste*/
+               semop(semaph,&sb1,1);
+
+                if(elem_decanille(elem_cheval)==VRAI)
+                {
+                        /*deverrouillage de la liste*/
+                        semop(semaph,&sb2,1);
+                        break;
+                }
+
+                /* verrouillage du semaphore du cheval*/
+                elem_sem_verrouiller(&elem_cheval);
+
+                /*deverrouillage de la liste*/
+                semop(semaph,&sb2,1);
+
+
+      /*
+       * Avancee sur la piste
+       */
+
+      /* Coup de de */
+      deplacement = commun_coup_de_de() ;
+#ifdef _DEBUG_
+      printf(" Lancement du De --> %d\n", deplacement );
+#endif
+
+      arrivee = depart+deplacement ;
+
+      if( arrivee > PISTE_LONGUEUR-1 )
+        {
+          arrivee = PISTE_LONGUEUR-1 ;
+          fini = VRAI ;
+
+                /*verrouillage de la liste*/
+            semop(semaph,&sb1,1);
+        liste_elem_rechercher(&recherche ,liste,elem_cheval );
+                elem_etat_affecter(&elem_cheval , ARRIVE) ;
+        liste_elem_affecter(liste ,recherche ,elem_cheval );
+
+                /*deverrouillage de la liste*/
+        semop(semaph,&sb2,1);
+        }
+
+      if( depart != arrivee )
+        {
+
+          /*
+           * Si case d'arrivee occupee alors on decanille le cheval existant
+           */
+
+                semArr.sem_op=-1;
+            	semArr.sem_num=arrivee;
+                /* on verrouille la case d'arrivee */
+            	semop(semaph,&semArr,1);
+
+                if(arrivee!=PISTE_LONGUEUR-1)
+                {
+            	if(piste_cell_libre(piste,arrivee)!=VRAI) {
+                                piste_cell_lire(piste,arrivee,&cell_tmp);
+                                /*verrouillage de la liste*/
+                                semop(semaph,&sb1,1);
+
+                                i=0 ;
+                                booleen_t trouve = FAUX ;
+                                elem_id_t nb_elems = liste->nb ;
+								
+								// on cherche si il y un cheval sur la case d arrivee
+                                while( (i<nb_elems) && (!trouve) )
+                                {
+                                              if( cell_comparer( liste->liste[i].cell , cell_tmp ) == 0 )
+                                                {
+                                                        elem_tmp=liste->liste[i];
+                                                        trouve=VRAI;
+                                              }else
+                                                        i++ ;
+                            	}
+
+                                /*deverrouillage de la liste*/
+                            	semop(semaph,&sb2,1);
+                                /*verrouillage du semaphore du cheval adverse*/
+                            	elem_sem_verrouiller(&elem_tmp);
+
+                                if(piste_cell_libre(piste,arrivee)!=VRAI) {
+                                /*verrouillage de la liste*/
+                          		semop(semaph,&sb1,1);
+                           		liste_elem_rechercher(&recherche,liste,elem_tmp);
+
+                    	if(elem_decanille(elem_tmp)==VRAI) {
+                            /*on decanille le cheval adverse*/
+                            elem_etat_affecter(&elem_tmp,DECANILLE);
+                        	liste_elem_affecter(liste ,recherche,elem_tmp);
+                        	printf("Vous avez decanille le cheval \"%c\" ",elem_tmp.cell.marque);
+                        }
+
+                                           /*deverrouillage de la liste*/
+                                           semop(semaph,&sb2,1);
+                }
+
+                                /* deverrouillage du semaphore du cheval ennemi*/
+                            elem_sem_deverrouiller(&elem_tmp) ;
+                        }
+        }
+
+
+          /*
+           * Deplacement: effacement case de depart, affectation case d'arrivee
+           */
+
+                piste_cell_affecter( piste,arrivee,cell_cheval);
+                piste_cell_effacer( piste ,depart) ;
+
+                semArr.sem_op=1;
+                /*deverrouillage de la case d'arrivee*/
+                semop(semaph,&semArr,1);
+
+                /*deverrouillage du semaphore du cheval*/
+                elem_sem_deverrouiller(&elem_cheval);
+
+#ifdef _DEBUG_
+          printf("Deplacement du cheval \"%c\" de %d a %d\n",
+                 marque, depart, arrivee );
+#endif
+
+
+        }
+      /* Affichage de la piste  */
+      piste_afficher_lig( piste );
+          liste_afficher(liste);
+      depart = arrivee ;
+    }
+
+  /*
+   * Suppression du cheval de la liste
+   */
+
+   /*verrouillage de la liste*/
+        semop(semaph,&sb1,1);
+
+        if(liste_elem_rechercher(&suppr ,liste,elem_cheval)!=VRAI)
+        {
+                perror("L element n est pas dans la liste");
+                exit(-1);
+        }
+
+        elem_cheval=liste_elem_lire(liste ,suppr) ;
+            liste_elem_supprimer(liste,suppr);
+           semop(semaph,&sb2,1);
+
+
+        /* on affiche l'etat du cheval*/
+        if(elem_cheval.etat==DECANILLE)
+        {
+                printf( "Le cheval \"%c\" A ETE DECANILLE\n" , marque );
+        }else if(elem_cheval.etat==ARRIVE)
+        {
+                printf( "Le cheval \"%c\" A FRANCHIT LA LIGNE D ARRIVEE\n" , marque );
+        }
+
+  exit(0);
+} 

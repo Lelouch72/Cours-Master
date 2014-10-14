@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!ELEMENT bibtex ((book|article)*)>
+<!ELEMENT article (author+,title,journal,volume,number,month?,year,pages?,keyword?,url?)>
+<!ELEMENT book (author,title,publisher,address?,year)>
+
+
+<!ATTLIST book nom NMTOKEN #REQUIRED>
+<!ATTLIST article nom NMTOKEN #REQUIRED>
+
+<!ELEMENT author (#PCDATA)>
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT journal (#PCDATA)>
+<!ELEMENT volume (#PCDATA)>
+<!ELEMENT number (#PCDATA)>
+<!ELEMENT month (#PCDATA)>
+<!ELEMENT year (#PCDATA)>
+<!ELEMENT pages (#PCDATA)>
+<!ELEMENT publisher (#PCDATA)>
+<!ELEMENT address (#PCDATA)>
+<!ELEMENT keyword (#PCDATA)>
+<!ELEMENT url (#PCDATA)>
+

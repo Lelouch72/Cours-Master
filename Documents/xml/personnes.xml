@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="cars.xsl"?>
+<!--output="personnes.html"-->
+<!--xpath="//personnes"-->
+
+
+<!DOCTYPE personnes SYSTEM "personnes.dtd">
+
+<personnes>
+
+		<personne>
+			<nom> Anderson </nom>
+			<prenom> Samuel English </prenom>
+			<sexe> Masculin </sexe>
+			<naissance> 
+				<lieu> Sideview </lieu>
+				<date> 25 aout 1871 </date>	
+				<pere>	<personne> 
+							<nom> Anderson </nom>
+							<prenom> Thomas Corwin </prenom>
+							<sexe> Masculin </sexe>
+						</personne> 
+				</pere>
+				<mere>
+						<personne> 
+							<nom> English </nom>
+							<prenom> Leanah Demint</prenom>
+							<sexe> Feminin </sexe>
+						</personne> 
+				</mere>	
+			</naissance>
+			
+			<deces>  
+				<lieu> Mt.Sterling, KY </lieu>
+				<date> 10 novembre 1919 </date>
+				<personne> 
+							<sexe> Masculin </sexe>
+				</personne> 
+			</deces>
+			
+			<mariage>
+				<personne> 
+							<nom> Anderson </nom>
+							<prenom> Cora Rucker </prenom>
+							<sexe> Feminin </sexe>
+							<naissance>
+								<lieu> Cincinatti </lieu>
+								<date> 15 juillet 1892 </date>
+								<pere>
+									<personne> 
+										<prenom> Judson McDaniel </prenom>
+										<sexe> Masculin </sexe>
+										<naissance>
+												<date> 1847 </date> 
+										</naissance>
+										<deces> 
+												<date> 1886 </date>
+										</deces>
+									</personne>  
+								</pere>
+								<mere>
+									<personne> 
+										<prenom> Mary E.Blevins </prenom>
+										<sexe> Feminin </sexe>
+										<naissance>
+												<date> 1834 </date> 
+										</naissance>
+										<deces> 
+												<date> 1905 </date>
+										</deces>
+									</personne>  
+								</mere>
+							</naissance>
+							<deces>
+								<lieu> Sideview </lieu>
+								<date> 21 juillet 1909 </date>
+							</deces>
+				</personne> 
+			</mariage>
+			
+			<mariage>
+				<personne> 
+							<prenom> Cathy </prenom>
+							<sexe> Feminin </sexe>
+				</personne> 
+			</mariage>
+			
+		
+		
+		</personne>
+		<personne> 
+			<nom> Anderson </nom>
+			<prenom> Judson McDaniel </prenom>
+			<sexe> Masculin </sexe>
+			<naissance> 
+				<lieu> MontGomery County, KY </lieu>
+				<date> 19 juillet 1894 </date>	
+				<pere>	<personne> 
+							<nom> Anderson </nom>
+							<prenom> Samuel English </prenom>
+							<sexe> Masculin </sexe>
+						</personne> 
+				</pere>
+				<mere>
+						<personne> 
+							<nom> Anderson </nom>
+							<prenom> Cora Rucker</prenom>
+							<sexe> Feminin </sexe>
+						</personne> 
+				</mere>	
+			</naissance>
+		
+		
+		</personne>
+
+
+
+
+
+
+
+
+</personnes>
