@@ -82,7 +82,11 @@ function [res] = gaussienne(img, moyenne, covariance, k)
 
   for j=1:5000
     for i=0:9
-      p(i+1) = exp(-0.5*(img([i+1],:)-moyenne([i+1],:))*inv(reshape(covariance([i+1],:,:),k,k))*(img([i+1],:)-moyenne([i+1],:))') / sqrt(2*pi*det(reshape(covariance([i+1],:,:),k,k)^0.5));
+	%p(i+1) = (1 / sqrt(2*pi*det(reshape(covariance([i+1],:,:),k,k)^0.5)) * exp(-0.5*(img([j],:)-moyenne([i+1],:)))*inv(reshape(covariance([i+1],:,:),k,k))*(img([j],:)-moyenne([i+1],:))');
+
+
+      p(i+1) = exp(-0.5*(img([j],:)-moyenne([i+1],:))*inv(reshape(covariance([i+1],:,:),k,k))*(img([j],:)-moyenne([i+1],:))') / sqrt(2*pi*det(reshape(covariance([i+1],:,:),k,k)^0.5));
+      
     end
     [x, ix] = max(p(:,2));
     res(j,:) = ix;
@@ -105,23 +109,23 @@ endfunction
 
 
 
-%App_class = load("appr_cl.ascii");
-%App = load("appr.ascii");
-%Dev_class = load("dev_cl.ascii");
-%Dev = load("dev.ascii");
-%Eval = load("eval.ascii");
+App_class = load("appr_cl.ascii");
+App = load("appr.ascii");
+Dev_class = load("dev_cl.ascii");
+Dev = load("dev.ascii");
+Eval = load("eval.ascii");
 
-%k = 33;
-%project_data(App,k);
+k = 33;
+project_data(App,k);
 
-%Appacp = load("appr-acp.ascii");
-%Devacp = load("dev-acp.ascii");
-%Evalacp = load("eval-acp.ascii");
+Appacp = load("appr-acp.ascii");
+Devacp = load("dev-acp.ascii");
+Evalacp = load("eval-acp.ascii");
 
 
-%probaApriori = probaApriori(App_class);
+probaApriori = probaApriori(App_class);
 %moyenne = moyenne(App,App_class);
-%covariance = covariance(App,App_class);
+covariance2 = covariance(App,App_class);
 
 moyenne = moyenne(Appacp.Ap,App_class);
 covariance = covariance(Appacp.Ap,App_class);
@@ -131,29 +135,29 @@ covariance = covariance(Appacp.Ap,App_class);
 %c = size(covariance)
 %d = size(k)
 
-%class = gaussienne(Devacp.Ap,moyenne,covariance,k);
+class = gaussienne(Devacp.Ap,moyenne,covariance,k);
 %size(class)
 
 img = Devacp.Ap;
-i=0;
-p = exp(-0.5*(img([i+1],:)-moyenne([i+1],:))*inv(reshape(covariance([i+1],:,:),k,k))*(img([i+1],:)-moyenne([i+1],:))') / sqrt(2*pi*det(reshape(covariance([i+1],:,:),k,k)^0.5));
-p
+%i=0;
+%p = exp(-0.5*(img([i+1],:)-moyenne([i+1],:))*inv(reshape(covariance([i+1],:,:),k,k))*(img([i+1],:)-moyenne([i+1],:))') / sqrt(2*pi*det(reshape(covariance([i+1],:,:),k,k)^0.5));
+%p;
 
-s = exp(-0.5*(img([i+1],:)-moyenne([i+1],:))*inv(reshape(covariance([i+1],:,:),k,k))*(img([i+1],:)-moyenne([i+1],:))');
-s
+%s = exp(-0.5*(img([i+1],:)-moyenne([i+1],:))*inv(reshape(covariance([i+1],:,:),k,k))*(img([i+1],:)-moyenne([i+1],:))');
+%s
 
-t = sqrt(2*pi*det(reshape(covariance([i+1],:,:),k,k)^0.5));
-t
+%t = sqrt(2*pi*det(reshape(covariance([i+1],:,:),k,k)^0.5));
+%t
 
-w = -0.5*(img([i+1],:)-moyenne([i+1],:))*inv(reshape(covariance([i+1],:,:),k,k))*(img([i+1],:)-moyenne([i+1],:))'
-w
+%w = -0.5*(img([i+1],:)-moyenne([i+1],:))*inv(reshape(covariance([i+1],:,:),k,k))*(img([i+1],:)-moyenne([i+1],:))'
+%w
 
-y = -0.5*(img([i+1],:)-moyenne([i+1],:));
-y
+%y = -0.5*(img([i+1],:)-moyenne([i+1],:));
+%y
 
-z = inv(reshape(covariance([i+1],:,:),k,k));
-z
+%z = inv(reshape(covariance([i+1],:,:),k,k));
+%z
 
 
-%e = taux_erreur(Dev_class,class);
-%e 
+e = taux_erreur(Dev_class,class);
+e 
