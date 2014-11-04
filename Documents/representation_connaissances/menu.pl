@@ -25,3 +25,14 @@ plat(P):- viande(P).
 plat(P):- poisson(P).
 
 
+/*maxNote([Val],[Note],Val,Note).
+maxNote([Val|ResteVal],[Note|ResteNote],Val,Note):- maxNote(ResteVal,ResteNote,MaxResteV,MaxResteN),Val>MaxResteV.
+
+maxNote([Val|ResteVal],[Note|ResteNote],MaxResteV,MaxResteN):- maxNote(ResteVal,ResteNote,MaxResteV,MaxResteN),Val=<MaxResteV.
+
+
+
+meilleurP([[X],[Y]],X,Y).
+meilleurP([[A,B]|ResteP],[A,B]):- meilleurP(ResteP,[ResteP1,ResteP2]),A>ResteP1.
+meilleurP([[A,B]|ResteP],[ResteP1,ResteP2]):- meilleurP(ResteP,[ResteP1,ResteP2]),A>ResteP1.
+*/
